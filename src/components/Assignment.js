@@ -50,6 +50,36 @@ class Assignment extends React.Component {
     this.setState({selected: event.target.value});
   }
   
+  // Add course
+  addAssignment = (assignment) => {
+    const token = Cookies.get('XSRF-TOKEN');
+    fetch(`${SERVER_URL}/course/${assignment.courseId}/assignment`,
+      { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json',
+                   'X-XSRF-TOKEN': token  }, 
+        body: JSON.stringify(assignment)
+      })
+    .then(res => {
+        if (res.ok) {
+          toast.success("Assignment successfully added", {
+              position: toast.POSITION.BOTTOM_LEFT
+          });
+          this.fetchAssignments();
+        } else {
+          toast.error("Error when adding", {
+              position: toast.POSITION.BOTTOM_LEFT
+          });
+          console.error('Post http status =' + res.status);
+        }})
+    .catch(err => {
+      toast.error("Error when adding", {
+            position: toast.POSITION.BOTTOM_LEFT
+        });
+        console.error(err);
+    })
+  } 
+
   render() {
      const columns = [
       {
@@ -85,18 +115,13 @@ class Assignment extends React.Component {
               Grade
             </Button>
 
-            <AddAssignment />
+            <AddAssignment addAssignment={this.addAssignment}/>
 
-            {/* <br/>
-            <br/>
-            <TextField autoFocus style = {{width:200}} label="Your Answer" name="attempt" 
-            onChange={this.handleChange} value={this.state.attempt} /> 
-            <br/>
-            <br/>
-            <TextField style = {{width: 200}} label="alias" name="alias" 
-            onChange={this.handleChange} value={this.state.alias} /> 
-            <br/>
-            <br/> */}
+            {/* The button below will lead to a temporary page */}
+            <Button component={Link} to={{pathname:'/enrollment',   assignment: assignmentSelected }} 
+                    variant="outlined" color="primary" disabled={this.state.assignments.length===0}  style={{margin: 10}}>
+              Enrollment
+            </Button>
 
             <ToastContainer autoClose={1500} /> 
           </div>
