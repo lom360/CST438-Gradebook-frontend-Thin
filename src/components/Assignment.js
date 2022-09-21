@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Radio from '@mui/material/Radio';
 import {DataGrid} from '@mui/x-data-grid';
 import {SERVER_URL} from '../constants.js'
+import AddAssignment from './AddAssignment.js';
 
 // NOTE:  for OAuth security, http request must have
 //   credentials: 'include' 
@@ -49,6 +50,36 @@ class Assignment extends React.Component {
     this.setState({selected: event.target.value});
   }
   
+  // Add course
+  addAssignment = (assignment) => {
+    const token = Cookies.get('XSRF-TOKEN');
+    fetch(`${SERVER_URL}/course/${assignment.courseId}/assignment`,
+      { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json',
+                   'X-XSRF-TOKEN': token  }, 
+        body: JSON.stringify(assignment)
+      })
+    .then(res => {
+        if (res.ok) {
+          toast.success("Assignment successfully added", {
+              position: toast.POSITION.BOTTOM_LEFT
+          });
+          this.fetchAssignments();
+        } else {
+          toast.error("Error when adding", {
+              position: toast.POSITION.BOTTOM_LEFT
+          });
+          console.error('Post http status =' + res.status);
+        }})
+    .catch(err => {
+      toast.error("Error when adding", {
+            position: toast.POSITION.BOTTOM_LEFT
+        });
+        console.error(err);
+    })
+  } 
+
   render() {
      const columns = [
       {
@@ -83,6 +114,15 @@ class Assignment extends React.Component {
                     variant="outlined" color="primary" disabled={this.state.assignments.length===0}  style={{margin: 10}}>
               Grade
             </Button>
+
+            <AddAssignment addAssignment={this.addAssignment}/>
+
+            {/* The button below will lead to a temporary page */}
+            <Button component={Link} to={{pathname:'/enrollment',   assignment: assignmentSelected }} 
+                    variant="outlined" color="primary" disabled={this.state.assignments.length===0}  style={{margin: 10}}>
+              Enrollment
+            </Button>
+
             <ToastContainer autoClose={1500} /> 
           </div>
       )
