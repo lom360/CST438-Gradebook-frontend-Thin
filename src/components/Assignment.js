@@ -50,7 +50,7 @@ class Assignment extends React.Component {
     this.setState({selected: event.target.value});
   }
   
-  // Add course
+  // Add assignment
   addAssignment = (assignment) => {
     const token = Cookies.get('XSRF-TOKEN');
     fetch(`${SERVER_URL}/course/${assignment.courseId}/assignment`,
@@ -110,7 +110,7 @@ class Assignment extends React.Component {
               <div style={{ height: 450, width: '100%', align:"left"   }}>
                 <DataGrid rows={this.state.assignments} columns={columns} />
               </div>                
-            <Button component={Link} to={{pathname:'/gradebook',   assignment: assignmentSelected }} 
+            <Button id="gradeBtn" component={Link} to={{pathname:'/gradebook',   assignment: assignmentSelected }} 
                     variant="outlined" color="primary" disabled={this.state.assignments.length===0}  style={{margin: 10}}>
               Grade
             </Button>
