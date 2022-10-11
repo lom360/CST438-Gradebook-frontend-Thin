@@ -29,8 +29,9 @@ class Assignment extends React.Component {
     fetch(`${SERVER_URL}/gradebook`, 
       {  
         method: 'GET', 
-        headers: { 'X-XSRF-TOKEN': token }
-      } )
+        headers: { 'X-XSRF-TOKEN': token },
+        credentials: 'include'
+      })
     .then((response) => response.json()) 
     .then((responseData) => { 
       if (Array.isArray(responseData.assignments)) {
@@ -58,6 +59,7 @@ class Assignment extends React.Component {
         method: 'POST', 
         headers: { 'Content-Type': 'application/json',
                    'X-XSRF-TOKEN': token  }, 
+                   credentials: 'include',
         body: JSON.stringify(assignment)
       })
     .then(res => {
@@ -105,6 +107,7 @@ class Assignment extends React.Component {
       
       const assignmentSelected = this.state.assignments[this.state.selected];
       return (
+
           <div align="left" >
             <h4>Assignment(s) ready to grade: </h4>
               <div style={{ height: 450, width: '100%', align:"left"   }}>
@@ -118,10 +121,10 @@ class Assignment extends React.Component {
             <AddAssignment addAssignment={this.addAssignment}/>
 
             {/* The button below will lead to a temporary page */}
-            <Button component={Link} to={{pathname:'/enrollment',   assignment: assignmentSelected }} 
+            {/* <Button component={Link} to={{pathname:'/enrollment',   assignment: assignmentSelected }} 
                     variant="outlined" color="primary" disabled={this.state.assignments.length===0}  style={{margin: 10}}>
               Enrollment
-            </Button>
+            </Button> */}
 
             <ToastContainer autoClose={1500} /> 
           </div>
