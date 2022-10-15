@@ -8,6 +8,7 @@ import Radio from '@mui/material/Radio';
 import {DataGrid} from '@mui/x-data-grid';
 import {SERVER_URL} from '../constants.js'
 import AddAssignment from './AddAssignment.js';
+import StudentGrades from './StudentGrades.js';
 
 // NOTE:  for OAuth security, http request must have
 //   credentials: 'include' 
@@ -16,7 +17,7 @@ import AddAssignment from './AddAssignment.js';
 class Assignment extends React.Component {
     constructor(props) {
       super(props);
-      this.state = {selected: 0, assignments: []};
+      this.state = {selected: 0, assignments: [], isInstructor: false};
     };
  
    componentDidMount() {
@@ -34,6 +35,9 @@ class Assignment extends React.Component {
       })
     .then((response) => response.json()) 
     .then((responseData) => { 
+      this.setState({isInstructor: responseData.isInstructor});
+      console.log(this.state.isInstructor);
+      console.log(responseData.assignments);
       if (Array.isArray(responseData.assignments)) {
         //  add to each assignment an "id"  This is required by DataGrid  "id" is the row index in the data grid table 
         this.setState({ assignments: responseData.assignments.map((assignment, index) => ( { id: index, ...assignment } )) });
@@ -80,7 +84,7 @@ class Assignment extends React.Component {
         });
         console.error(err);
     })
-  } 
+  }
 
   render() {
      const columns = [
@@ -106,29 +110,42 @@ class Assignment extends React.Component {
       ];
       
       const assignmentSelected = this.state.assignments[this.state.selected];
-      return (
+      if(this.state.isInstructor) {
+        return (
 
           <div align="left" >
             <h4>Assignment(s) ready to grade: </h4>
               <div style={{ height: 450, width: '100%', align:"left"   }}>
                 <DataGrid rows={this.state.assignments} columns={columns} />
               </div>                
-            <Button id="gradeBtn" component={Link} to={{pathname:'/gradebook',   assignment: assignmentSelected }} 
-                    variant="outlined" color="primary" disabled={this.state.assignments.length===0}  style={{margin: 10}}>
-              Grade
+              <Button id="gradeBtn" component={Link} to={{pathname:'/gradebook',   assignment: assignmentSelected }} 
+                      variant="outlined" color="primary" disabled={this.state.assignments.length===0}  style={{margin: 10}}>
+                Grade
+              </Button>
+
+              <AddAssignment addAssignment={this.addAssignment}/>
+
+              <ToastContainer autoClose={1500} /> 
+          </div>
+        )
+      }
+      else {
+        return(
+          <div align="left" >
+            <h4>Press to check assignment grades: </h4>
+              {/* <div style={{ height: 450, width: '100%', align:"left"   }}>
+                <DataGrid rows={this.state.assignments} columns={columns} />
+              </div>    */}
+            {/* <StudentGrades component={Link} to={{pathname:'/studentgrades'}}/> */}
+            <Button id="studentBtn" component={Link} to={{pathname:'/studentgrades'}} 
+            variant="outlined" color="primary" style={{margin: 10}}>
+                Check Grades
             </Button>
-
-            <AddAssignment addAssignment={this.addAssignment}/>
-
-            {/* The button below will lead to a temporary page */}
-            {/* <Button component={Link} to={{pathname:'/enrollment',   assignment: assignmentSelected }} 
-                    variant="outlined" color="primary" disabled={this.state.assignments.length===0}  style={{margin: 10}}>
-              Enrollment
-            </Button> */}
-
             <ToastContainer autoClose={1500} /> 
           </div>
-      )
+        )
+      }
+
   }
 }  
 
