@@ -15,10 +15,10 @@ class AddAssignment extends React.Component {
         super(props);
         this.state = {open: false, 
                     assignment:{
-                        assignmentName: props.assignmentName,
-                        dueDate: props.dueDate,
-                        courseId: props.courseId 
-        }, tempName: "", tempDate: "", tempCourse: 0 };
+                        assignmentName: "",
+                        dueDate: "",
+                        courseId: 0 
+        } };
       };
       
       handleClickOpen = () => {
@@ -65,14 +65,11 @@ class AddAssignment extends React.Component {
         this.handleClose();
       }
 
-    render() {
-        // const addForm = (e) => {
-        //     alert("Adding new Assignment");
-        // }
+      render() {
 
         return (
             <span>
-                <Button onClick={this.handleClickOpen} variant="outlined" color="primary">Add Assignment</Button>
+                <Button id="addForm" onClick={this.handleClickOpen} variant="outlined" color="primary">Add Assignment</Button>
 
                 <Dialog open={this.state.open} onClose={this.handleClose}>
                     <DialogTitle>Add Assignment</DialogTitle>
@@ -91,14 +88,49 @@ class AddAssignment extends React.Component {
                                 onChange={this.handleCourseIdChange}  />
                     </DialogContent>
                     <DialogActions>
-                        <Button color="secondary" onClick={this.handleClose}>Cancel</Button>
-                        <Button color="primary" onClick={this.handleAdd}>Add</Button>
+                        <Button id="cancel" color="secondary" onClick={this.handleClose}>Cancel</Button>
+                        <Button id="submit" color="primary" onClick={this.handleAdd}>Add</Button>
                     </DialogActions>
                 </Dialog> 
             </span>
             
         )
     }
+
+    // render() {
+    //     // const addForm = (e) => {
+    //     //     alert("Adding new Assignment");
+    //     // }
+
+    //     return (
+    //         <span>
+    //             <Button onClick={this.handleClickOpen} variant="outlined" color="primary">Add Assignment</Button>
+
+    //             <Dialog open={this.state.open} onClose={this.handleClose}>
+    //                 <DialogTitle>Add Assignment</DialogTitle>
+    //                 <DialogContent  style={{paddingTop: 20}} >
+    //                     <TextField autoFocus fullWidth 
+    //                             label="Assignment Name" 
+    //                             name="assignmentName" 
+    //                             onChange={this.handleAssignmentNameChange}  />
+    //                     <TextField style={{marginTop: 7}} autoFocus fullWidth 
+    //                             label="Due Date" 
+    //                             name="dueDate" 
+    //                             onChange={this.handleDueDateChange}   />
+    //                     <TextField style={{marginTop: 7}} autoFocus fullWidth 
+    //                             label="Course ID" 
+    //                             name="courseId" 
+    //                             onChange={this.handleCourseIdChange}  />
+    //                 </DialogContent>
+    //                 <DialogActions>
+    //                     <Button color="secondary" onClick={this.handleClose}>Cancel</Button>
+    //                     <Button color="primary" onClick={this.handleAdd}>Add</Button>
+    //                 </DialogActions>
+    //             </Dialog> 
+    //         </span>
+            
+    //     )
+    // }
 }
 
 // required property:  addCourse is a function to call to perform the Add action
